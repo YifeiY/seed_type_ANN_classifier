@@ -3,33 +3,36 @@ import math
 import random
 import matplotlib.pyplot as plt
 
-iterations = 200
-learning_rate = 0.01
+iterations = 20000
+learning_rate = 0.001
 
 def main():
+  global learning_rate
   random.seed(0)
   # read data from csv
   train_set = readcsv("trainSeeds.csv")
   test_set = readcsv("testSeeds.csv")
 
-  wholeset = train_set + test_set
-  normalize_dataset(wholeset)
+  #wholeset = train_set + test_set
+  #normalize_dataset(wholeset)
 
-  train_set = wholeset[0:len(train_set)]
-  test_set = wholeset[len(train_set):]
+  #train_set = wholeset[0:len(train_set)]
+  #test_set = wholeset[len(train_set):]
 
-  random.shuffle(train_set)
-  random.shuffle(test_set)
 
+  
   # initialize the weights of the perceptrons in the output layer
   p1 = [random.random()] * len(train_set[0])
   p2 = [random.random()] * len(train_set[0])
   p3 = [random.random()] * len(train_set[0])
   neurons = [p1,p2,p3]
 	
-	
+  accuracy = 0
   accuracy_plot = []
   for iteration in range(iterations):
+    random.shuffle(train_set)
+    random.shuffle(test_set)
+    #learning_rate = (1 - accuracy)/300
     for row in train_set:
       outputs = feed_data(neurons,row)
       expected = [0, 0, 0]
@@ -37,7 +40,7 @@ def main():
       adjust_weights(neurons,row,outputs,expected)
     accuracy = test(test_set,neurons)
     accuracy_plot.append([accuracy,iteration])
-    print("accuracy =", accuracy)
+    print(iteration,"-- accuracy =",int(accuracy*100))
     
     
   plt.plot([accuracy_plot[i][1] for i in range(len(accuracy_plot))],[accuracy_plot[i][0] for i in range(len(accuracy_plot))])
