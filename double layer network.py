@@ -1,8 +1,9 @@
 import numpy
 import math
 import random
+import matplotlib.pyplot as plt
 
-iterations = 40
+iterations = 200
 learning_rate = 0.01
 
 def main():
@@ -12,8 +13,7 @@ def main():
   test_set = readcsv("testSeeds.csv")
 
   wholeset = train_set + test_set
-  minmax = dataset_minmax(wholeset)
-  normalize_dataset(wholeset, minmax)
+  normalize_dataset(wholeset)
 
   train_set = wholeset[0:len(train_set)]
   test_set = wholeset[len(train_set):]
@@ -21,22 +21,28 @@ def main():
   random.shuffle(train_set)
   random.shuffle(test_set)
 
-  printarr("train set", train_set)
-  printarr("test set", test_set)
-
   # initialize the weights of the perceptrons in the output layer
   p1 = [random.random()] * len(train_set[0])
   p2 = [random.random()] * len(train_set[0])
   p3 = [random.random()] * len(train_set[0])
   neurons = [p1,p2,p3]
-
+	
+	
+  accuracy_plot = []
   for iteration in range(iterations):
     for row in train_set:
       outputs = feed_data(neurons,row)
       expected = [0, 0, 0]
       expected[int(row[-1]) - 1] = 1
       adjust_weights(neurons,row,outputs,expected)
-    print("accuracy =", test(test_set,neurons))
+    accuracy = test(test_set,neurons)
+    accuracy_plot.append([accuracy,iteration])
+    print("accuracy =", accuracy)
+    
+    
+  plt.plot([accuracy_plot[i][1] for i in range(len(accuracy_plot))],[accuracy_plot[i][0] for i in range(len(accuracy_plot))])
+  plt.show()
+
 
 def adjust_weights(neurons,inputs,outputs,expected):
   inputs = inputs[:-1] +[1]
@@ -75,20 +81,12 @@ def activation(x):
   else:
     return 0
 
-#####need !!!!!!!!!!!!!!!
-def dataset_minmax(dataset):
-  minmax = list()
-  stats = [[min(column), max(column)] for column in zip(*dataset)]
-  return stats
 
-
-#####need !!!!!!!!!!!!!!!
-
-# Rescale dataset columns to the range 0-1
-def normalize_dataset(dataset, minmax):
+def normalize_dataset(dataset):
+  min_max = [[min(column), max(column)] for column in zip(*dataset)]
   for row in dataset:
     for i in range(len(row) - 1):
-      row[i] = (row[i] - minmax[i][0]) / (minmax[i][1] - minmax[i][0])
+      row[i] = (row[i] - min_max[i][0]) / (min_max[i][1] - min_max[i][0])
 
 def printarr(name,arr, end=5):
   print(name)

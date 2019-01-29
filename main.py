@@ -11,7 +11,7 @@ import csv
 import random
 import numpy as np
 import math
-
+import matplotlib.pyplot as plt
 # number of neurons in each layer
 layer_config = [8,5,3]
 learning_rate = 0.3
@@ -39,7 +39,8 @@ def main():
 
 
   network = make_network(layer_config)
-
+	
+  accuracy_plot = []
   for i in range(320):
     #print(i)
     for trail in range (len(train_set)):
@@ -49,7 +50,16 @@ def main():
       expected[int(inputs[-1])] = 1
       feed_error_back(network,expected) # calculate 'delta's
       update_weights(network,inputs[:-1])
-    print(accuracy(network,test_set)) # using test set to test the outcome of training on the training data set
+    accuracy_value = accuracy(network,test_set)
+    accuracy_plot.append([accuracy_value,i])
+    print(accuracy_value) # using test set to test the outcome of training on the training data set
+  
+
+
+    
+    
+  plt.plot([accuracy_plot[i][1] for i in range(len(accuracy_plot))],[accuracy_plot[i][0] for i in range(len(accuracy_plot))])
+  plt.show()
 
 
 
