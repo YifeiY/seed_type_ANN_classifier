@@ -49,7 +49,7 @@ def main():
       expected[int(inputs[-1])] = 1
       feed_error_back(network,expected) # calculate 'delta's
       update_weights(network,inputs[:-1])
-    print(accuracy(network,test_set))
+    print(accuracy(network,test_set)) # using test set to test the outcome of training on the training data set
 
 
 
