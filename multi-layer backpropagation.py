@@ -5,7 +5,7 @@
   # 4. 12. 10.18201/ijisae.64198.
 
 # This model (layers = [8,5,3]) is different from the one in citation (layers = [8,10,1])
-# But it is able to achieve above 99.49% accuracy after ~320 iterations
+# But it is able to achieve above 99.99% accuracy after ~320 iterations
 
 import csv
 import random
