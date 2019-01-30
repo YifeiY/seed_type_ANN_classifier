@@ -4,7 +4,7 @@ import random
 import matplotlib.pyplot as plt
 
 iterations = 20000
-learning_rate = 0.001
+learning_rate = 0.01
 
 def main():
   global learning_rate
@@ -36,7 +36,8 @@ def main():
     for row in train_set:
       outputs = feed_data(neurons,row)
       expected = [0, 0, 0]
-      expected[int(row[-1]) - 1] = 1
+      expected[int(row[-1])] = 1
+      #print(expected)
       adjust_weights(neurons,row,outputs,expected)
     accuracy = test(test_set,neurons)
     accuracy_plot.append([accuracy,iteration])
@@ -62,7 +63,8 @@ def test(test_set,neurons):
   correct = 0
   for row in test_set:
     expected = [0, 0, 0]
-    expected[int(row[-1]) - 1] = 1
+    expected[int(row[-1])] = 1
+    result = feed_data(neurons,row)
     if (expected == feed_data(neurons,row)):
       correct += 1
   return correct/total_length
@@ -79,7 +81,7 @@ def feed_data(neurons,row):
 
 
 def activation(x):
-  if x >0:
+  if x >=0:
     return 1
   else:
     return 0
@@ -105,6 +107,7 @@ def readcsv(filename):
     for row in csvfile:
       row = row[0:-1].split(',')
       row[-1] = int(row[-1])-1
+      print(row[-1])
       arr.append([float(i) for i in row])
       arr[-1][-1] = int(arr[-1][-1])
   return arr
