@@ -114,7 +114,7 @@ def feed_data(neurons,row):
   for neuron in neurons:
     summation = 0
     # calculate the potential sum
-    for i in range(len(neuron)):
+    for i in range(len(neuron)-1):
       summation += neuron[i] * row[i]
     summation += neuron[-1] # add the bias
     # check if the potential sum exceeds the
