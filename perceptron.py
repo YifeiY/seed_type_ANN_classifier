@@ -14,9 +14,9 @@ def main():
   random.shuffle(train_set)
 
   # initialize the weights of the perceptrons in the output layer
-  p1 = [random.random() for _ in range(len(train_set[0]))]
-  p2 = [random.random() for _ in range(len(train_set[0]))]
-  p3 = [random.random() for _ in range(len(train_set[0]))]
+  p1 = [random.random() for _ in range(len(train_set[0]) + 1)]
+  p2 = [random.random() for _ in range(len(train_set[0]) + 1)]
+  p3 = [random.random() for _ in range(len(train_set[0]) + 1)]
   neurons = [p1,p2,p3]
   initial_weights = [[neuron[j] for j in range(len(neuron))] for neuron in neurons]
 
@@ -114,7 +114,7 @@ def feed_data(neurons,row):
   for neuron in neurons:
     summation = 0
     # calculate the potential sum
-    for i in range(len(neuron)):
+    for i in range(len(neuron)-1):
       summation += neuron[i] * row[i]
     summation += neuron[-1] # add the bias
     # check if the potential sum exceeds the
@@ -133,11 +133,15 @@ def adjust_weights(neurons,inputs,outputs,expected):
   inputs = inputs[:-1] + [1]
   for j in range(len(neurons)):
     neuron = neurons[j]
-    for i in range (len(neuron)):
+    for i in range (len(neuron)-1):
       if outputs[j] == 1 and expected[j] == 0:
         neuron[i] -= learning_rate * inputs[i]
       elif outputs[j] == 0 and expected[j] == 1:
         neuron[i] += learning_rate * inputs[i]
+    if outputs[j] == 1 and expected[j] == 0:
+        neuron[-1] -= learning_rate
+    elif outputs[j] == 0 and expected[j] == 1:
+        neuron[-1] += learning_rate
 
 # test calcualte the accuracy of the network, using test data
 def test(test_set,neurons):
